@@ -11,6 +11,7 @@
   <logger name="net.fhirfactory.pegacorn.ladon" level="INFO"/>
   <logger name="net.fhirfactory.pegacorn.deployment.topology" level="INFO"/>
   <logger name="net.fhirfactory.pegacorn.ladon.processingplant" level="TRACE"/>
+  <logger name="net.fhirfactory.pegacorn.petasos.topology" level="TRACE"/>
 
   <root level="TRACE">
     <appender-ref ref="STDOUT" />

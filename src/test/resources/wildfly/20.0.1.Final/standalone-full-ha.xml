@@ -117,10 +117,10 @@
                 <append value="true"/>
             </periodic-rotating-file-handler>
             <logger category="net.fhirfactory.pegacorn.deployment">
-                <level name="DEBUG"/>
+                <level name="TRACE"/>
             </logger>
             <logger category="net.fhirfactory.pegacorn.ladon">
-                <level name="INFO"/>
+                <level name="TRACE"/>
             </logger>
             <logger category="net.fhirfactory.pegacorn.petasos.audit">
                 <level name="INFO"/>
@@ -132,7 +132,7 @@
                 <level name="TRACE"/>
             </logger>
             <logger category="net.fhirfactory.pegacorn.petasos.topology">
-                <level name="INFO"/>
+                <level name="TRACE"/>
             </logger>
             <logger category="com.arjuna">
                 <level name="INFO"/>

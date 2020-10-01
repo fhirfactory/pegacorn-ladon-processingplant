@@ -109,7 +109,7 @@ public class LadonProcessingPlantTest {
      */
     @Test
     public void testGetNodeIdentifier() {
-        if(ladonPlatform.getNodeIdentifier() != null){
+        if(ladonPlatform.getProcessingPlantNodeId() != null){
             assertTrue(true);
         }
     }
