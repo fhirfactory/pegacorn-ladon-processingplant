@@ -34,22 +34,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
-public class LadonProcessingPlant extends CoreInternalSubsystemProcessingPlatform {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LadonProcessingPlant.class);
-
-    private static String LADON_VERSION = "1.0.0";
-
-    @Override
-    protected String specifyProcessingPlantName(){
-        return(getSubsystemComponentNames().getLadonProcessingPlantDefault());
-    }
-
-    @Override
-    protected String specifyProcessingPlantVersion(){
-        return(LADON_VERSION);
-    }
+public abstract class LadonProcessingPlant extends CoreInternalSubsystemProcessingPlatform {
 
     @Override
     protected String specifySite() {
@@ -63,17 +49,17 @@ public class LadonProcessingPlant extends CoreInternalSubsystemProcessingPlatfor
 
     @Override
     protected void buildProcessingPlantWorkshops() {
-        LOG.debug(".buildLadonWorkshops(): Entry");
-        LOG.trace(".buildLadonWorkshops(): 1st, the DTCache!");
-        if(LOG.isTraceEnabled()) {
-            LOG.trace(".buildLadonWorkshops(): ProcessingPlant Identifier --> {}", this.getProcessingPlantNodeId());
-            LOG.trace(".buildLadonWorkshops(): ProcessingPlant NodeElement --> {}", this.getProcessingPlantNodeElement());
+        getLogger().debug(".buildLadonWorkshops(): Entry");
+        getLogger().trace(".buildLadonWorkshops(): 1st, the DTCache!");
+        if(getLogger().isTraceEnabled()) {
+            getLogger().trace(".buildLadonWorkshops(): ProcessingPlant Identifier --> {}", this.getProcessingPlantNodeId());
+            getLogger().trace(".buildLadonWorkshops(): ProcessingPlant NodeElement --> {}", this.getProcessingPlantNodeElement());
         }
         FDN dtcacheFDN = new FDN(this.getProcessingPlantNodeId());
         dtcacheFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "DTCache"));
         NodeElementIdentifier dtcacheId = new NodeElementIdentifier(dtcacheFDN.getToken());
         NodeElement dtcache = new NodeElement();
-        dtcache.setVersion(LADON_VERSION);
+        dtcache.setVersion(getVersion());
         dtcache.setNodeInstanceID(dtcacheId);
         FDN dtcacheFunctionFDN = new FDN(this.getProcessingPlantNodeElement().getNodeFunctionID());
         dtcacheFunctionFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "DTCache"));
@@ -84,12 +70,13 @@ public class LadonProcessingPlant extends CoreInternalSubsystemProcessingPlatfor
         dtcache.setContainingElementID(this.getProcessingPlantNodeId());
         this.getDeploymentIM().registerNode(dtcache);
         this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),dtcache);
-        LOG.trace(".buildLadonWorkshops(): 2nd, the Edge");
+
+        getLogger().trace(".buildLadonWorkshops(): 2nd, the Edge");
         FDN edgeFDN = new FDN(this.getProcessingPlantNodeId());
         edgeFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "Edge"));
         NodeElementIdentifier edgeId = new NodeElementIdentifier(edgeFDN.getToken());
         NodeElement edge = new NodeElement();
-        edge.setVersion(LADON_VERSION);
+        edge.setVersion(getVersion());
         edge.setNodeInstanceID(edgeId);
         FDN edgeFunctionFDN = new FDN(this.getProcessingPlantNodeElement().getNodeFunctionID());
         edgeFunctionFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "Edge"));
@@ -100,12 +87,13 @@ public class LadonProcessingPlant extends CoreInternalSubsystemProcessingPlatfor
         edge.setContainingElementID(this.getProcessingPlantNodeId());
         this.getDeploymentIM().registerNode(edge);
         this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),edge);
-        LOG.trace(".buildLadonWorkshops(): 3nd, the StateSpace");
+
+        getLogger().trace(".buildLadonWorkshops(): 3nd, the StateSpace");
         FDN ssFDN = new FDN(this.getProcessingPlantNodeId());
         ssFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "StateSpace"));
         NodeElementIdentifier statespaceIdentifier = new NodeElementIdentifier(ssFDN.getToken());
         NodeElement statespace = new NodeElement();
-        statespace.setVersion(LADON_VERSION);
+        statespace.setVersion(getVersion());
         statespace.setNodeInstanceID(statespaceIdentifier);
         FDN ssFunctionFDN = new FDN(this.getProcessingPlantNodeElement().getNodeFunctionID());
         ssFunctionFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "StateSpace"));
@@ -116,12 +104,13 @@ public class LadonProcessingPlant extends CoreInternalSubsystemProcessingPlatfor
         statespace.setContainingElementID(this.getProcessingPlantNodeId());
         this.getDeploymentIM().registerNode(statespace);
         this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),statespace);
-        LOG.trace(".buildLadonWorkshops(): 4th, the MDR");
+
+        getLogger().trace(".buildLadonWorkshops(): 4th, the MDR");
         FDN mdrFDN = new FDN(this.getProcessingPlantNodeId());
         mdrFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "MasterDataRepositoryServices"));
         NodeElementIdentifier mdrIdentifier = new NodeElementIdentifier(mdrFDN.getToken());
         NodeElement mdr = new NodeElement();
-        mdr.setVersion(LADON_VERSION);
+        mdr.setVersion(getVersion());
         mdr.setNodeInstanceID(mdrIdentifier);
         FDN mdrFunctionFDN = new FDN(this.getProcessingPlantNodeElement().getNodeFunctionID());
         mdrFunctionFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "MasterDataRepositoryServices"));
@@ -132,12 +121,13 @@ public class LadonProcessingPlant extends CoreInternalSubsystemProcessingPlatfor
         mdr.setContainingElementID(this.getProcessingPlantNodeId());
         this.getDeploymentIM().registerNode(mdr);
         this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),mdr);
-        LOG.trace(".buildLadonWorkshops(): 4th, the MDR");
+
+        getLogger().trace(".buildLadonWorkshops(): 5th, the Behaviours");
         FDN behavioursFDN = new FDN(this.getProcessingPlantNodeId());
         behavioursFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "Behaviours"));
         NodeElementIdentifier behavioursIdentifier = new NodeElementIdentifier(behavioursFDN.getToken());
         NodeElement behaviours = new NodeElement();
-        behaviours.setVersion(LADON_VERSION);
+        behaviours.setVersion(getVersion());
         behaviours.setNodeInstanceID(behavioursIdentifier);
         FDN behaivoursFunctioNFDN = new FDN(this.getProcessingPlantNodeElement().getNodeFunctionID());
         behaivoursFunctioNFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "Behaviours"));
@@ -148,6 +138,6 @@ public class LadonProcessingPlant extends CoreInternalSubsystemProcessingPlatfor
         behaviours.setContainingElementID(this.getProcessingPlantNodeId());
         this.getDeploymentIM().registerNode(behaviours);
         this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),behaviours);
-        LOG.debug(".buildLadonWorkshops(): Exit");
+        getLogger().debug(".buildLadonWorkshops(): Exit");
     }
 }
