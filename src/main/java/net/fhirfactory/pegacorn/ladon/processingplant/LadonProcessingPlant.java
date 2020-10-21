@@ -47,6 +47,21 @@ public abstract class LadonProcessingPlant extends CoreInternalSubsystemProcessi
         return "___";
     }
 
+    /**
+     * This class creates the Processing Plant "Workshops" for Ladon. "Workshops" are used to segregate
+     * the processing functionality (much like packaging) and support ease of integration and monitoring.
+     * 
+     * The Workshops are presented as part of the Watchdog service and collate/aggregate information for
+     * performance and usage metrics.
+     * 
+     * 
+     * There are five Workshops in Ladon:
+     * 		1. DTCache
+     * 		2. Edge
+     * 		3. StateSpace
+     * 		4. MasterDataRepositoryServices
+     * 		5. Behaviours
+     */
     @Override
     protected void buildProcessingPlantWorkshops() {
         getLogger().debug(".buildLadonWorkshops(): Entry");
