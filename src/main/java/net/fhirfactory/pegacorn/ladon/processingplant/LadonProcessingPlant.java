@@ -71,13 +71,13 @@ public abstract class LadonProcessingPlant extends CoreInternalSubsystemProcessi
             getLogger().trace(".buildLadonWorkshops(): ProcessingPlant NodeElement --> {}", this.getProcessingPlantNodeElement());
         }
         FDN dtcacheFDN = new FDN(this.getProcessingPlantNodeId());
-        dtcacheFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "DTCache"));
+        dtcacheFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "VirtualDB"));
         NodeElementIdentifier dtcacheId = new NodeElementIdentifier(dtcacheFDN.getToken());
         NodeElement dtcache = new NodeElement();
         dtcache.setVersion(getVersion());
         dtcache.setNodeInstanceID(dtcacheId);
         FDN dtcacheFunctionFDN = new FDN(this.getProcessingPlantNodeElement().getNodeFunctionID());
-        dtcacheFunctionFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "DTCache"));
+        dtcacheFunctionFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "VirtualDB"));
         dtcache.setNodeFunctionID(dtcacheFunctionFDN.getToken());
         dtcache.setConcurrencyMode(this.getProcessingPlantNodeElement().getConcurrencyMode());
         dtcache.setResilienceMode(this.getProcessingPlantNodeElement().getResilienceMode());
