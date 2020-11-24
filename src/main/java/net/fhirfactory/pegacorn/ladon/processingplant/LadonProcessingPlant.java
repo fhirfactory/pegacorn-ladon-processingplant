@@ -23,6 +23,7 @@ package net.fhirfactory.pegacorn.ladon.processingplant;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.RDN;
+import net.fhirfactory.pegacorn.ladon.mdr.fhirplace.FHIRPlaceMDRWorkshop;
 import net.fhirfactory.pegacorn.petasos.model.topology.NodeElement;
 import net.fhirfactory.pegacorn.petasos.model.topology.NodeElementFunctionToken;
 import net.fhirfactory.pegacorn.petasos.model.topology.NodeElementIdentifier;
@@ -33,9 +34,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 
 public abstract class LadonProcessingPlant extends CoreInternalSubsystemProcessingPlatform {
+
+    @Inject
+    private FHIRPlaceMDRWorkshop fhirPlaceMDRWorkshop;
 
     @Override
     protected String specifySite() {
@@ -65,26 +70,26 @@ public abstract class LadonProcessingPlant extends CoreInternalSubsystemProcessi
     @Override
     protected void buildProcessingPlantWorkshops() {
         getLogger().debug(".buildLadonWorkshops(): Entry");
-        getLogger().trace(".buildLadonWorkshops(): 1st, the DTCache!");
+        getLogger().trace(".buildLadonWorkshops(): 1st, the VirtualDB!");
         if(getLogger().isTraceEnabled()) {
             getLogger().trace(".buildLadonWorkshops(): ProcessingPlant Identifier --> {}", this.getProcessingPlantNodeId());
             getLogger().trace(".buildLadonWorkshops(): ProcessingPlant NodeElement --> {}", this.getProcessingPlantNodeElement());
         }
-        FDN dtcacheFDN = new FDN(this.getProcessingPlantNodeId());
-        dtcacheFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "VirtualDB"));
-        NodeElementIdentifier dtcacheId = new NodeElementIdentifier(dtcacheFDN.getToken());
-        NodeElement dtcache = new NodeElement();
-        dtcache.setVersion(getVersion());
-        dtcache.setNodeInstanceID(dtcacheId);
+        FDN virtualDBFDN = new FDN(this.getProcessingPlantNodeId());
+        virtualDBFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "VirtualDB"));
+        NodeElementIdentifier dtcacheId = new NodeElementIdentifier(virtualDBFDN.getToken());
+        NodeElement virtualDB = new NodeElement();
+        virtualDB.setVersion(getVersion());
+        virtualDB.setNodeInstanceID(dtcacheId);
         FDN dtcacheFunctionFDN = new FDN(this.getProcessingPlantNodeElement().getNodeFunctionID());
         dtcacheFunctionFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "VirtualDB"));
-        dtcache.setNodeFunctionID(dtcacheFunctionFDN.getToken());
-        dtcache.setConcurrencyMode(this.getProcessingPlantNodeElement().getConcurrencyMode());
-        dtcache.setResilienceMode(this.getProcessingPlantNodeElement().getResilienceMode());
-        dtcache.setInstanceInPlace(true);
-        dtcache.setContainingElementID(this.getProcessingPlantNodeId());
-        this.getDeploymentIM().registerNode(dtcache);
-        this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),dtcache);
+        virtualDB.setNodeFunctionID(dtcacheFunctionFDN.getToken());
+        virtualDB.setConcurrencyMode(this.getProcessingPlantNodeElement().getConcurrencyMode());
+        virtualDB.setResilienceMode(this.getProcessingPlantNodeElement().getResilienceMode());
+        virtualDB.setInstanceInPlace(true);
+        virtualDB.setContainingElementID(this.getProcessingPlantNodeId());
+        this.getDeploymentIM().registerNode(virtualDB);
+        this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),virtualDB);
 
         getLogger().trace(".buildLadonWorkshops(): 2nd, the Edge");
         FDN edgeFDN = new FDN(this.getProcessingPlantNodeId());
@@ -153,6 +158,25 @@ public abstract class LadonProcessingPlant extends CoreInternalSubsystemProcessi
         behaviours.setContainingElementID(this.getProcessingPlantNodeId());
         this.getDeploymentIM().registerNode(behaviours);
         this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),behaviours);
+
+        getLogger().debug(".buildLadonWorkshops(): 6th, add the FHIRPlaceMDR & Initialise");
+        FDN fhirplaceMDRFDN = new FDN(this.getProcessingPlantNodeId());
+        fhirplaceMDRFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "FHIRPlaceMDR"));
+        NodeElementIdentifier fhirplaceMDRIdentifier = new NodeElementIdentifier(fhirplaceMDRFDN.getToken());
+        NodeElement fhirplaceMDR = new NodeElement();
+        fhirplaceMDR.setVersion(getVersion());
+        fhirplaceMDR.setNodeInstanceID(fhirplaceMDRIdentifier);
+        FDN fhirplaceMDRFunction = new FDN(this.getProcessingPlantNodeElement().getNodeFunctionID());
+        fhirplaceMDRFunction.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "FHIRPlaceMDR"));
+        fhirplaceMDR.setNodeFunctionID(fhirplaceMDRFunction.getToken());
+        fhirplaceMDR.setConcurrencyMode(this.getProcessingPlantNodeElement().getConcurrencyMode());
+        fhirplaceMDR.setResilienceMode(this.getProcessingPlantNodeElement().getResilienceMode());
+        fhirplaceMDR.setInstanceInPlace(true);
+        fhirplaceMDR.setContainingElementID(this.getProcessingPlantNodeId());
+        this.getDeploymentIM().registerNode(fhirplaceMDR);
+        this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),fhirplaceMDR);
+
+        fhirPlaceMDRWorkshop.initialise();
         getLogger().debug(".buildLadonWorkshops(): Exit");
     }
 }
