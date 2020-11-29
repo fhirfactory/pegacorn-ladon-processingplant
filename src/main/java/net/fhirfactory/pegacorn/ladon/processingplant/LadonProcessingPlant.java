@@ -39,19 +39,6 @@ import javax.inject.Inject;
 
 public abstract class LadonProcessingPlant extends CoreInternalSubsystemProcessingPlatform {
 
-    @Inject
-    private FHIRPlaceMDRWorkshop fhirPlaceMDRWorkshop;
-
-    @Override
-    protected String specifySite() {
-        return "___";
-    }
-
-    @Override
-    protected String specifyPlatform() {
-        return "___";
-    }
-
     /**
      * This class creates the Processing Plant "Workshops" for Ladon. "Workshops" are used to segregate
      * the processing functionality (much like packaging) and support ease of integration and monitoring.
@@ -159,24 +146,6 @@ public abstract class LadonProcessingPlant extends CoreInternalSubsystemProcessi
         this.getDeploymentIM().registerNode(behaviours);
         this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),behaviours);
 
-        getLogger().debug(".buildLadonWorkshops(): 6th, add the FHIRPlaceMDR & Initialise");
-        FDN fhirplaceMDRFDN = new FDN(this.getProcessingPlantNodeId());
-        fhirplaceMDRFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "FHIRPlaceMDR"));
-        NodeElementIdentifier fhirplaceMDRIdentifier = new NodeElementIdentifier(fhirplaceMDRFDN.getToken());
-        NodeElement fhirplaceMDR = new NodeElement();
-        fhirplaceMDR.setVersion(getVersion());
-        fhirplaceMDR.setNodeInstanceID(fhirplaceMDRIdentifier);
-        FDN fhirplaceMDRFunction = new FDN(this.getProcessingPlantNodeElement().getNodeFunctionID());
-        fhirplaceMDRFunction.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "FHIRPlaceMDR"));
-        fhirplaceMDR.setNodeFunctionID(fhirplaceMDRFunction.getToken());
-        fhirplaceMDR.setConcurrencyMode(this.getProcessingPlantNodeElement().getConcurrencyMode());
-        fhirplaceMDR.setResilienceMode(this.getProcessingPlantNodeElement().getResilienceMode());
-        fhirplaceMDR.setInstanceInPlace(true);
-        fhirplaceMDR.setContainingElementID(this.getProcessingPlantNodeId());
-        this.getDeploymentIM().registerNode(fhirplaceMDR);
-        this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),fhirplaceMDR);
-
-        fhirPlaceMDRWorkshop.initialise();
         getLogger().debug(".buildLadonWorkshops(): Exit");
     }
 }
