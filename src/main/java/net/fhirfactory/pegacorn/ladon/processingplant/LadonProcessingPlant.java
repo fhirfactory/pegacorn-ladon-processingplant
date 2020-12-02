@@ -23,6 +23,7 @@ package net.fhirfactory.pegacorn.ladon.processingplant;
 
 import net.fhirfactory.pegacorn.common.model.FDN;
 import net.fhirfactory.pegacorn.common.model.RDN;
+import net.fhirfactory.pegacorn.ladon.mdr.fhirplace.FHIRPlaceMDRWorkshop;
 import net.fhirfactory.pegacorn.petasos.model.topology.NodeElement;
 import net.fhirfactory.pegacorn.petasos.model.topology.NodeElementFunctionToken;
 import net.fhirfactory.pegacorn.petasos.model.topology.NodeElementIdentifier;
@@ -33,19 +34,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 
 public abstract class LadonProcessingPlant extends CoreInternalSubsystemProcessingPlatform {
-
-    @Override
-    protected String specifySite() {
-        return "___";
-    }
-
-    @Override
-    protected String specifyPlatform() {
-        return "___";
-    }
 
     /**
      * This class creates the Processing Plant "Workshops" for Ladon. "Workshops" are used to segregate
@@ -65,26 +57,26 @@ public abstract class LadonProcessingPlant extends CoreInternalSubsystemProcessi
     @Override
     protected void buildProcessingPlantWorkshops() {
         getLogger().debug(".buildLadonWorkshops(): Entry");
-        getLogger().trace(".buildLadonWorkshops(): 1st, the DTCache!");
+        getLogger().trace(".buildLadonWorkshops(): 1st, the VirtualDB!");
         if(getLogger().isTraceEnabled()) {
             getLogger().trace(".buildLadonWorkshops(): ProcessingPlant Identifier --> {}", this.getProcessingPlantNodeId());
             getLogger().trace(".buildLadonWorkshops(): ProcessingPlant NodeElement --> {}", this.getProcessingPlantNodeElement());
         }
-        FDN dtcacheFDN = new FDN(this.getProcessingPlantNodeId());
-        dtcacheFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "DTCache"));
-        NodeElementIdentifier dtcacheId = new NodeElementIdentifier(dtcacheFDN.getToken());
-        NodeElement dtcache = new NodeElement();
-        dtcache.setVersion(getVersion());
-        dtcache.setNodeInstanceID(dtcacheId);
+        FDN virtualDBFDN = new FDN(this.getProcessingPlantNodeId());
+        virtualDBFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "VirtualDB"));
+        NodeElementIdentifier dtcacheId = new NodeElementIdentifier(virtualDBFDN.getToken());
+        NodeElement virtualDB = new NodeElement();
+        virtualDB.setVersion(getVersion());
+        virtualDB.setNodeInstanceID(dtcacheId);
         FDN dtcacheFunctionFDN = new FDN(this.getProcessingPlantNodeElement().getNodeFunctionID());
-        dtcacheFunctionFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "DTCache"));
-        dtcache.setNodeFunctionID(dtcacheFunctionFDN.getToken());
-        dtcache.setConcurrencyMode(this.getProcessingPlantNodeElement().getConcurrencyMode());
-        dtcache.setResilienceMode(this.getProcessingPlantNodeElement().getResilienceMode());
-        dtcache.setInstanceInPlace(true);
-        dtcache.setContainingElementID(this.getProcessingPlantNodeId());
-        this.getDeploymentIM().registerNode(dtcache);
-        this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),dtcache);
+        dtcacheFunctionFDN.appendRDN(new RDN(NodeElementTypeEnum.WORKSHOP.getNodeElementType(), "VirtualDB"));
+        virtualDB.setNodeFunctionID(dtcacheFunctionFDN.getToken());
+        virtualDB.setConcurrencyMode(this.getProcessingPlantNodeElement().getConcurrencyMode());
+        virtualDB.setResilienceMode(this.getProcessingPlantNodeElement().getResilienceMode());
+        virtualDB.setInstanceInPlace(true);
+        virtualDB.setContainingElementID(this.getProcessingPlantNodeId());
+        this.getDeploymentIM().registerNode(virtualDB);
+        this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),virtualDB);
 
         getLogger().trace(".buildLadonWorkshops(): 2nd, the Edge");
         FDN edgeFDN = new FDN(this.getProcessingPlantNodeId());
@@ -153,6 +145,7 @@ public abstract class LadonProcessingPlant extends CoreInternalSubsystemProcessi
         behaviours.setContainingElementID(this.getProcessingPlantNodeId());
         this.getDeploymentIM().registerNode(behaviours);
         this.getDeploymentIM().addContainedNodeToNode(this.getProcessingPlantNodeId(),behaviours);
+
         getLogger().debug(".buildLadonWorkshops(): Exit");
     }
 }
